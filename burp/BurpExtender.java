@@ -3,10 +3,6 @@ package burp;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -55,9 +51,6 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
     String data_2 = "";
     String universal_cookie = "";
 
-    public BurpExtender() {
-    }
-
     public void registerExtenderCallbacks(final IBurpExtenderCallbacks callbacks) {
         this.stdout = new PrintWriter(callbacks.getStdout(), true);
         this.stdout.println("Welcome to use the repaired version of XiaYue. The original plugin repository address is: https://github.com/smxiazi/xia_Yue");
@@ -66,145 +59,133 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         this.callbacks = callbacks;
         this.helpers = callbacks.getHelpers();
         callbacks.setExtensionName("xia Yue V1.2 changed Ethan.Wang V1.0");
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                BurpExtender.this.splitPane = new JSplitPane(1);
-                JSplitPane splitPanes = new JSplitPane(0);
-                JSplitPane splitPanes_2 = new JSplitPane(0);
-                BurpExtender.this.logTable = BurpExtender.this.new Table(BurpExtender.this);
-                BurpExtender.this.logTable.getColumnModel().getColumn(0).setPreferredWidth(10);
-                BurpExtender.this.logTable.getColumnModel().getColumn(1).setPreferredWidth(50);
-                BurpExtender.this.logTable.getColumnModel().getColumn(2).setPreferredWidth(300);
-                JScrollPane scrollPane = new JScrollPane(BurpExtender.this.logTable);
-                JPanel jp = new JPanel();
-                jp.setLayout(new GridLayout(1, 1));
-                jp.add(scrollPane);
-                JPanel jps = new JPanel();
-                jps.setLayout(new GridLayout(10, 1));
-                JLabel jls = new JLabel("插件名：瞎越 author：算命縖子");
-                JLabel jls_1 = new JLabel("吐司:www.t00ls.com");
-                JLabel jls_2 = new JLabel("版本：xia Yue V1.2 changed Ethan.Wang V1.0");
-                JLabel jls_3 = new JLabel("感谢名单：Moonlit");
-                final JCheckBox chkbox1 = new JCheckBox("启动插件");
-                final JCheckBox chkbox2 = new JCheckBox("启动万能cookie");
-                JLabel jls_5 = new JLabel("如果需要多个域名加白请用,隔开");
-                final JTextField textField = new JTextField("填写白名单域名");
-                JButton btn1 = new JButton("清空列表");
-                final JButton btn3 = new JButton("启动白名单");
-                JPanel jps_2 = new JPanel();
-                JLabel jps_2_jls_1 = new JLabel("越权：填写低权限认证信息,将会替换或新增");
-                final JTextArea jta = new JTextArea("Cookie: JSESSIONID=test;UUID=1;userid=admin\nAuthorization: Bearer test", 5, 50);
-                JScrollPane jsp = new JScrollPane(jta);
-                JLabel jps_2_jls_2 = new JLabel("未授权：将移除下列头部认证信息,区分大小写");
-                final JTextArea jta_1 = new JTextArea("Cookie\nAuthorization\nToken", 5, 50);
-                JScrollPane jsp_1 = new JScrollPane(jta_1);
-                jps_2.add(jps_2_jls_1);
-                jps_2.add(jsp);
-                jps_2.add(jps_2_jls_2);
-                jps_2.add(jsp_1);
-                jps_2.setLayout(new GridLayout(5, 1, 0, 0));
-                chkbox1.addItemListener(new ItemListener() {
-                    public void itemStateChanged(ItemEvent e) {
-                        if (chkbox1.isSelected()) {
-                            BurpExtender.this.switchs = 1;
-                            BurpExtender.this.data_1 = jta.getText();
-                            BurpExtender.this.data_2 = jta_1.getText();
-                            jta.setForeground(Color.BLACK);
-                            jta.setBackground(Color.LIGHT_GRAY);
-                            jta.setEditable(false);
-                            jta_1.setForeground(Color.BLACK);
-                            jta_1.setBackground(Color.LIGHT_GRAY);
-                            jta_1.setEditable(false);
-                        } else {
-                            BurpExtender.this.switchs = 0;
-                            jta.setForeground(Color.BLACK);
-                            jta.setBackground(Color.WHITE);
-                            jta.setEditable(true);
-                            jta_1.setForeground(Color.BLACK);
-                            jta_1.setBackground(Color.WHITE);
-                            jta_1.setEditable(true);
-                        }
+        SwingUtilities.invokeLater(() -> {
+            BurpExtender.this.splitPane = new JSplitPane(1);
+            JSplitPane splitPanes = new JSplitPane(0);
+            JSplitPane splitPanes_2 = new JSplitPane(0);
+            BurpExtender.this.logTable = BurpExtender.this.new Table(BurpExtender.this);
+            BurpExtender.this.logTable.getColumnModel().getColumn(0).setPreferredWidth(10);
+            BurpExtender.this.logTable.getColumnModel().getColumn(1).setPreferredWidth(50);
+            BurpExtender.this.logTable.getColumnModel().getColumn(2).setPreferredWidth(300);
+            JScrollPane scrollPane = new JScrollPane(BurpExtender.this.logTable);
+            JPanel jp = new JPanel();
+            jp.setLayout(new GridLayout(1, 1));
+            jp.add(scrollPane);
+            JPanel jps = new JPanel();
+            jps.setLayout(new GridLayout(10, 1));
+            JLabel jls = new JLabel("插件名：瞎越 author：算命縖子");
+            JLabel jls_1 = new JLabel("吐司:www.t00ls.com");
+            JLabel jls_2 = new JLabel("版本：xia Yue V1.2 changed Ethan.Wang V1.0");
+            JLabel jls_3 = new JLabel("感谢名单：Moonlit");
+            final JCheckBox chkbox1 = new JCheckBox("启动插件");
+            final JCheckBox chkbox2 = new JCheckBox("启动万能cookie");
+            JLabel jls_5 = new JLabel("如果需要多个域名加白请用,隔开");
+            final JTextField textField = new JTextField("填写白名单域名");
+            JButton btn1 = new JButton("清空列表");
+            final JButton btn3 = new JButton("启动白名单");
+            JPanel jps_2 = new JPanel();
+            JLabel jps_2_jls_1 = new JLabel("越权：填写低权限认证信息,将会替换或新增");
+            final JTextArea jta = new JTextArea("Cookie: JSESSIONID=test;UUID=1;userid=admin\nAuthorization: Bearer test", 5, 50);
+            JScrollPane jsp = new JScrollPane(jta);
+            JLabel jps_2_jls_2 = new JLabel("未授权：将移除下列头部认证信息,区分大小写");
+            final JTextArea jta_1 = new JTextArea("Cookie\nAuthorization\nToken", 5, 50);
+            JScrollPane jsp_1 = new JScrollPane(jta_1);
+            jps_2.add(jps_2_jls_1);
+            jps_2.add(jsp);
+            jps_2.add(jps_2_jls_2);
+            jps_2.add(jsp_1);
+            jps_2.setLayout(new GridLayout(5, 1, 0, 0));
+            chkbox1.addItemListener(e -> {
+                if (chkbox1.isSelected()) {
+                    BurpExtender.this.switchs = 1;
+                    BurpExtender.this.data_1 = jta.getText();
+                    BurpExtender.this.data_2 = jta_1.getText();
+                    jta.setForeground(Color.BLACK);
+                    jta.setBackground(Color.LIGHT_GRAY);
+                    jta.setEditable(false);
+                    jta_1.setForeground(Color.BLACK);
+                    jta_1.setBackground(Color.LIGHT_GRAY);
+                    jta_1.setEditable(false);
+                } else {
+                    BurpExtender.this.switchs = 0;
+                    jta.setForeground(Color.BLACK);
+                    jta.setBackground(Color.WHITE);
+                    jta.setEditable(true);
+                    jta_1.setForeground(Color.BLACK);
+                    jta_1.setBackground(Color.WHITE);
+                    jta_1.setEditable(true);
+                }
 
-                    }
-                });
-                chkbox2.addItemListener(new ItemListener() {
-                    public void itemStateChanged(ItemEvent e) {
-                        BurpExtender.this.universal_cookie = "";
-                    }
-                });
-                btn1.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        BurpExtender.this.log.clear();
-                        BurpExtender.this.conut = 0;
-                        BurpExtender.this.log4_md5.clear();
-                        BurpExtender.this.fireTableRowsInserted(BurpExtender.this.log.size(), BurpExtender.this.log.size());
-                    }
-                });
-                btn3.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if (btn3.getText().equals("启动白名单")) {
-                            btn3.setText("关闭白名单");
-                            BurpExtender.this.white_URL = textField.getText();
-                            BurpExtender.this.white_switchs = 1;
-                            textField.setEditable(false);
-                            textField.setForeground(Color.GRAY);
-                        } else {
-                            btn3.setText("启动白名单");
-                            BurpExtender.this.white_switchs = 0;
-                            textField.setEditable(true);
-                            textField.setForeground(Color.BLACK);
-                        }
+            });
+            chkbox2.addItemListener(e -> BurpExtender.this.universal_cookie = "");
+            btn1.addActionListener(e -> {
+                BurpExtender.this.log.clear();
+                BurpExtender.this.conut = 0;
+                BurpExtender.this.log4_md5.clear();
+                BurpExtender.this.fireTableRowsInserted(BurpExtender.this.log.size(), BurpExtender.this.log.size());
+            });
+            btn3.addActionListener(e -> {
+                if (btn3.getText().equals("启动白名单")) {
+                    btn3.setText("关闭白名单");
+                    BurpExtender.this.white_URL = textField.getText();
+                    BurpExtender.this.white_switchs = 1;
+                    textField.setEditable(false);
+                    textField.setForeground(Color.GRAY);
+                } else {
+                    btn3.setText("启动白名单");
+                    BurpExtender.this.white_switchs = 0;
+                    textField.setEditable(true);
+                    textField.setForeground(Color.BLACK);
+                }
 
-                    }
-                });
-                jps.add(jls);
-                jps.add(jls_1);
-                jps.add(jls_2);
-                jps.add(jls_3);
-                jps.add(chkbox1);
-                jps.add(btn1);
-                jps.add(jls_5);
-                jps.add(textField);
-                jps.add(btn3);
-                BurpExtender.this.tabs = new JTabbedPane();
-                BurpExtender.this.requestViewer = callbacks.createMessageEditor(BurpExtender.this, false);
-                BurpExtender.this.responseViewer = callbacks.createMessageEditor(BurpExtender.this, false);
-                BurpExtender.this.requestViewer_1 = callbacks.createMessageEditor(BurpExtender.this, false);
-                BurpExtender.this.responseViewer_1 = callbacks.createMessageEditor(BurpExtender.this, false);
-                BurpExtender.this.requestViewer_2 = callbacks.createMessageEditor(BurpExtender.this, false);
-                BurpExtender.this.responseViewer_2 = callbacks.createMessageEditor(BurpExtender.this, false);
-                JSplitPane y_jp = new JSplitPane(1);
-                y_jp.setDividerLocation(500);
-                y_jp.setLeftComponent(BurpExtender.this.requestViewer.getComponent());
-                y_jp.setRightComponent(BurpExtender.this.responseViewer.getComponent());
-                JSplitPane d_jp = new JSplitPane(1);
-                d_jp.setDividerLocation(500);
-                d_jp.setLeftComponent(BurpExtender.this.requestViewer_1.getComponent());
-                d_jp.setRightComponent(BurpExtender.this.responseViewer_1.getComponent());
-                JSplitPane w_jp = new JSplitPane(1);
-                w_jp.setDividerLocation(500);
-                w_jp.setLeftComponent(BurpExtender.this.requestViewer_2.getComponent());
-                w_jp.setRightComponent(BurpExtender.this.responseViewer_2.getComponent());
-                BurpExtender.this.tabs.addTab("原始数据包", y_jp);
-                BurpExtender.this.tabs.addTab("低权限数据包", d_jp);
-                BurpExtender.this.tabs.addTab("未授权数据包", w_jp);
-                splitPanes_2.setLeftComponent(jps);
-                splitPanes_2.setRightComponent(jps_2);
-                splitPanes.setLeftComponent(jp);
-                splitPanes.setRightComponent(BurpExtender.this.tabs);
-                BurpExtender.this.splitPane.setLeftComponent(splitPanes);
-                BurpExtender.this.splitPane.setRightComponent(splitPanes_2);
-                BurpExtender.this.splitPane.setDividerLocation(1000);
-                callbacks.customizeUiComponent(BurpExtender.this.splitPane);
-                callbacks.customizeUiComponent(BurpExtender.this.logTable);
-                callbacks.customizeUiComponent(scrollPane);
-                callbacks.customizeUiComponent(jps);
-                callbacks.customizeUiComponent(jp);
-                callbacks.customizeUiComponent(BurpExtender.this.tabs);
-                callbacks.addSuiteTab(BurpExtender.this);
-                callbacks.registerHttpListener(BurpExtender.this);
-                callbacks.registerScannerCheck(BurpExtender.this);
-            }
+            });
+            jps.add(jls);
+            jps.add(jls_1);
+            jps.add(jls_2);
+            jps.add(jls_3);
+            jps.add(chkbox1);
+            jps.add(btn1);
+            jps.add(jls_5);
+            jps.add(textField);
+            jps.add(btn3);
+            BurpExtender.this.tabs = new JTabbedPane();
+            BurpExtender.this.requestViewer = callbacks.createMessageEditor(BurpExtender.this, false);
+            BurpExtender.this.responseViewer = callbacks.createMessageEditor(BurpExtender.this, false);
+            BurpExtender.this.requestViewer_1 = callbacks.createMessageEditor(BurpExtender.this, false);
+            BurpExtender.this.responseViewer_1 = callbacks.createMessageEditor(BurpExtender.this, false);
+            BurpExtender.this.requestViewer_2 = callbacks.createMessageEditor(BurpExtender.this, false);
+            BurpExtender.this.responseViewer_2 = callbacks.createMessageEditor(BurpExtender.this, false);
+            JSplitPane y_jp = new JSplitPane(1);
+            y_jp.setDividerLocation(500);
+            y_jp.setLeftComponent(BurpExtender.this.requestViewer.getComponent());
+            y_jp.setRightComponent(BurpExtender.this.responseViewer.getComponent());
+            JSplitPane d_jp = new JSplitPane(1);
+            d_jp.setDividerLocation(500);
+            d_jp.setLeftComponent(BurpExtender.this.requestViewer_1.getComponent());
+            d_jp.setRightComponent(BurpExtender.this.responseViewer_1.getComponent());
+            JSplitPane w_jp = new JSplitPane(1);
+            w_jp.setDividerLocation(500);
+            w_jp.setLeftComponent(BurpExtender.this.requestViewer_2.getComponent());
+            w_jp.setRightComponent(BurpExtender.this.responseViewer_2.getComponent());
+            BurpExtender.this.tabs.addTab("原始数据包", y_jp);
+            BurpExtender.this.tabs.addTab("低权限数据包", d_jp);
+            BurpExtender.this.tabs.addTab("未授权数据包", w_jp);
+            splitPanes_2.setLeftComponent(jps);
+            splitPanes_2.setRightComponent(jps_2);
+            splitPanes.setLeftComponent(jp);
+            splitPanes.setRightComponent(BurpExtender.this.tabs);
+            BurpExtender.this.splitPane.setLeftComponent(splitPanes);
+            BurpExtender.this.splitPane.setRightComponent(splitPanes_2);
+            BurpExtender.this.splitPane.setDividerLocation(1000);
+            callbacks.customizeUiComponent(BurpExtender.this.splitPane);
+            callbacks.customizeUiComponent(BurpExtender.this.logTable);
+            callbacks.customizeUiComponent(scrollPane);
+            callbacks.customizeUiComponent(jps);
+            callbacks.customizeUiComponent(jp);
+            callbacks.customizeUiComponent(BurpExtender.this.tabs);
+            callbacks.addSuiteTab(BurpExtender.this);
+            callbacks.registerHttpListener(BurpExtender.this);
+            callbacks.registerScannerCheck(BurpExtender.this);
         });
     }
 
@@ -218,17 +199,15 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 
     public void processHttpMessage(final int toolFlag, boolean messageIsRequest, final IHttpRequestResponse messageInfo) {
         if (this.switchs == 1 && toolFlag == 4 && !messageIsRequest) {
-            synchronized(this.log) {
-                Thread thread = new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            BurpExtender.this.checkVul(messageInfo, toolFlag);
-                        } catch (Exception var2) {
-                            BurpExtender.this.stdout.println("[运行错误]");
-                            BurpExtender.this.stdout.println(var2);
-                        }
-
+            synchronized (this.log) {
+                Thread thread = new Thread(() -> {
+                    try {
+                        BurpExtender.this.checkVul(messageInfo, toolFlag);
+                    } catch (Exception var2) {
+                        BurpExtender.this.stdout.println("[运行错误]");
+                        BurpExtender.this.stdout.println(var2);
                     }
+
                 });
                 thread.start();
             }
@@ -271,7 +250,7 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
             String static_file_2 = static_file_1[static_file_1.length - 1];
             bodyOffset = static_file.length;
 
-            for(int var13 = 0; var13 < bodyOffset; ++var13) {
+            for (int var13 = 0; var13 < bodyOffset; ++var13) {
                 String i = static_file[var13];
                 if (static_file_2.equals(i)) {
                     this.stdout.println("当前url为静态文件：" + temp_data + "\n");
@@ -284,8 +263,8 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 
         Iterator var29;
         IParameter para;
-        for(var29 = paraLists.iterator(); var29.hasNext(); temp_data = temp_data + "+" + para.getName()) {
-            para = (IParameter)var29.next();
+        for (var29 = paraLists.iterator(); var29.hasNext(); temp_data = temp_data + "+" + para.getName()) {
+            para = (IParameter) var29.next();
         }
 
         temp_data = temp_data + "+" + this.helpers.analyzeRequest(baseRequestResponse).getMethod();
@@ -294,8 +273,8 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         this.stdout.println(temp_data);
         var29 = this.log4_md5.iterator();
 
-        while(var29.hasNext()) {
-            Request_md5 i = (Request_md5)var29.next();
+        while (var29.hasNext()) {
+            Request_md5 i = (Request_md5) var29.next();
             if (i.md5_data.equals(temp_data)) {
                 return;
             }
@@ -312,17 +291,17 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 
         int i;
         int low_len;
-        for(i = 0; i < headers_y.size(); ++i) {
+        for (i = 0; i < headers_y.size(); ++i) {
             String head_key = headers_y.get(i).split(":")[0];
 
-            for(low_len = 0; low_len < data_1_list.length; ++low_len) {
+            for (low_len = 0; low_len < data_1_list.length; ++low_len) {
                 if (head_key.equals(data_1_list[low_len].split(":")[0])) {
                     headers_y.remove(i);
                 }
             }
         }
 
-        for(i = 0; i < data_1_list.length; ++i) {
+        for (i = 0; i < data_1_list.length; ++i) {
             headers_y.add(headers_y.size() / 2, data_1_list[i]);
         }
 
@@ -344,10 +323,10 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         String[] data_2_list = this.data_2.split("\n");
 
         int Unauthorized_len;
-        for(i = 0; i < headers_w.size(); ++i) {
+        for (i = 0; i < headers_w.size(); ++i) {
             String head_key = headers_w.get(i).split(":")[0];
 
-            for(Unauthorized_len = 0; Unauthorized_len < data_2_list.length; ++Unauthorized_len) {
+            for (Unauthorized_len = 0; Unauthorized_len < data_2_list.length; ++Unauthorized_len) {
                 if (head_key.equals(data_2_list[Unauthorized_len])) {
                     headers_w.remove(i);
                 }
@@ -488,7 +467,8 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         }
     }
 
-    private record Request_md5(String md5_data) {}
+    private record Request_md5(String md5_data) {
+    }
 
     private record LogEntry(int id, String Method, IHttpRequestResponsePersisted requestResponse,
                             IHttpRequestResponsePersisted requestResponse_1,
