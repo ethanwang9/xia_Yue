@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JButton;
@@ -220,12 +221,23 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
     }
 
     private void checkVul(IHttpRequestResponse baseRequestResponse, int toolFlag) {
+        this.stdout.println("\n========== 处理请求 ==========");
+        // 获取请求的URL并将其转换为字符串
         this.temp_data = String.valueOf(this.helpers.analyzeRequest(baseRequestResponse).getUrl());
+        // 获取响应数据的长度
         this.original_data_len = baseRequestResponse.getResponse().length;
+        //  计算响应体的实际长度
         int original_len = this.original_data_len - this.helpers.analyzeResponse(baseRequestResponse.getResponse()).getBodyOffset();
+        // HTTP 地址信息
+        // 0: Host 地址
+        // 1: Params 参数URL编码
         String[] temp_data_strarray = this.temp_data.split("\\?");
+        // HTTP Host 地址
         String temp_data = temp_data_strarray[0];
+        // URL分割
         String[] white_URL_list = this.white_URL.split(",");
+
+        // 白名单检查
         boolean white_swith;
         if (this.white_switchs == 1) {
             white_swith = false;
@@ -243,6 +255,7 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
             }
         }
 
+        // 静态文件检查
         int bodyOffset;
         if (toolFlag == 4 || toolFlag == 64) {
             String[] static_file = new String[]{"jpg", "png", "gif", "css", "js", "pdf", "mp3", "mp4", "avi", "map", "svg", "ico", "svg", "woff", "woff2", "ttf"};
@@ -253,42 +266,50 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
             for (int var13 = 0; var13 < bodyOffset; ++var13) {
                 String i = static_file[var13];
                 if (static_file_2.equals(i)) {
-                    this.stdout.println("当前url为静态文件：" + temp_data + "\n");
+                    this.stdout.println("当前url为静态文件：" + temp_data);
                     return;
                 }
             }
         }
 
+        // 请求参数
         List<IParameter> paraLists = this.helpers.analyzeRequest(baseRequestResponse).getParameters();
-
-        Iterator var29;
+        Iterator iter;
         IParameter para;
-        for (var29 = paraLists.iterator(); var29.hasNext(); temp_data = temp_data + "+" + para.getName()) {
-            para = (IParameter) var29.next();
+        for (iter = paraLists.iterator(); iter.hasNext(); temp_data = temp_data + "+" + para.getName()) {
+            para = (IParameter) iter.next();
         }
 
+        // 计算请求参数MD5哈希
         temp_data = temp_data + "+" + this.helpers.analyzeRequest(baseRequestResponse).getMethod();
-        this.stdout.println("\nMD5(\"" + temp_data + "\")");
+        this.stdout.println("MD5(\"" + temp_data + "\")");
         temp_data = MD5(temp_data);
-        this.stdout.println(temp_data);
-        var29 = this.log4_md5.iterator();
+        this.stdout.println("MD5: " + temp_data);
+        iter = this.log4_md5.iterator();
 
-        while (var29.hasNext()) {
-            Request_md5 i = (Request_md5) var29.next();
+        // 重复请求参数校验
+        while (iter.hasNext()) {
+            Request_md5 i = (Request_md5) iter.next();
             if (i.md5_data.equals(temp_data)) {
                 return;
             }
         }
 
         this.log4_md5.add(new Request_md5(temp_data));
+
+        // ==========
+        // 低权限
+        // ==========
         IRequestInfo analyIRequestInfo = this.helpers.analyzeRequest(baseRequestResponse);
         IHttpService iHttpService = baseRequestResponse.getHttpService();
         String request = this.helpers.bytesToString(baseRequestResponse.getRequest());
         bodyOffset = analyIRequestInfo.getBodyOffset();
         byte[] body = request.substring(bodyOffset).getBytes();
         List<String> headers_y = analyIRequestInfo.getHeaders();
+        // 请求请求头 data_1
         String[] data_1_list = this.data_1.split("\n");
 
+        // 修改请求头
         int i;
         int low_len;
         for (i = 0; i < headers_y.size(); ++i) {
@@ -305,23 +326,26 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
             headers_y.add(headers_y.size() / 2, data_1_list[i]);
         }
 
+        // 发送修改后的请求
         byte[] newRequest_y = this.helpers.buildHttpMessage(headers_y, body);
         IHttpRequestResponse requestResponse_y = this.callbacks.makeHttpRequest(iHttpService, newRequest_y);
         low_len = requestResponse_y.getResponse().length - this.helpers.analyzeResponse(requestResponse_y.getResponse()).getBodyOffset();
+        // 响应长度比较
         String low_len_data;
-        String var10000;
         if (original_len == 0) {
             low_len_data = Integer.toString(low_len);
         } else if (original_len == low_len) {
             low_len_data = low_len + "  √";
         } else {
-            var10000 = Integer.toString(low_len);
-            low_len_data = var10000 + "  ==> " + (original_len - low_len);
+            low_len_data = low_len + "  ==> " + (original_len - low_len);
         }
 
+        // ==========
+        // 未授权
+        // ==========
         List<String> headers_w = analyIRequestInfo.getHeaders();
         String[] data_2_list = this.data_2.split("\n");
-
+        // 修改请求头
         int Unauthorized_len;
         for (i = 0; i < headers_w.size(); ++i) {
             String head_key = headers_w.get(i).split(":")[0];
@@ -339,6 +363,7 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
             headers_w.add(headers_w.size() / 2, universal_cookies[1]);
         }
 
+        // 发送修改后的请求
         byte[] newRequest_w = this.helpers.buildHttpMessage(headers_w, body);
         IHttpRequestResponse requestResponse_w = this.callbacks.makeHttpRequest(iHttpService, newRequest_w);
         Unauthorized_len = requestResponse_w.getResponse().length - this.helpers.analyzeResponse(requestResponse_w.getResponse()).getBodyOffset();
@@ -348,12 +373,15 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         } else if (original_len == Unauthorized_len) {
             original_len_data = Unauthorized_len + "  √";
         } else {
-            var10000 = Integer.toString(Unauthorized_len);
-            original_len_data = var10000 + "  ==> " + (original_len - Unauthorized_len);
+            original_len_data = Unauthorized_len + "  ==> " + (original_len - Unauthorized_len);
         }
 
+        // ==========
+        // 更新界面
+        // ==========
         ++this.conut;
         int id = this.conut;
+        // 记录日志
         this.log.add(new LogEntry(id, this.helpers.analyzeRequest(baseRequestResponse).getMethod(), this.callbacks.saveBuffersToTempFiles(baseRequestResponse), this.callbacks.saveBuffersToTempFiles(requestResponse_y), this.callbacks.saveBuffersToTempFiles(requestResponse_w), String.valueOf(this.helpers.analyzeRequest(baseRequestResponse).getUrl()), original_len, low_len_data, original_len_data));
         this.fireTableDataChanged();
         this.logTable.setRowSelectionInterval(this.select_row, this.select_row);
