@@ -48,7 +48,9 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
     Table logTable;
     String white_URL = "";
     int white_switchs = 0;
+    // 越权请求头
     String data_1 = "";
+    // 未授权请求头
     String data_2 = "";
     String universal_cookie = "";
 
@@ -236,6 +238,7 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         String temp_data = temp_data_strarray[0];
         // URL分割
         String[] white_URL_list = this.white_URL.split(",");
+        this.stdout.println("URL: " + temp_data);
 
         // 白名单检查
         boolean white_swith;
@@ -266,7 +269,7 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
             for (int var13 = 0; var13 < bodyOffset; ++var13) {
                 String i = static_file[var13];
                 if (static_file_2.equals(i)) {
-                    this.stdout.println("当前url为静态文件：" + temp_data);
+                    this.stdout.println("[静态文件检查] 当前url为静态文件");
                     return;
                 }
             }
@@ -348,20 +351,27 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         // 修改请求头
         int Unauthorized_len;
         for (i = 0; i < headers_w.size(); ++i) {
+            // 遍历请求头
             String head_key = headers_w.get(i).split(":")[0];
 
+            // 判断请求头是否与未授权请求头一致，一致将移除
             for (Unauthorized_len = 0; Unauthorized_len < data_2_list.length; ++Unauthorized_len) {
                 if (head_key.equals(data_2_list[Unauthorized_len])) {
                     headers_w.remove(i);
+                    break;
                 }
             }
         }
 
+        // 未开放的功能
+        // 启动万能cookie，universal_cookie 中的内容将会添加到未授权请求头中
         if (!this.universal_cookie.isEmpty()) {
+            this.stdout.println("未授权看不懂的代码");
             String[] universal_cookies = this.universal_cookie.split("\n");
             headers_w.add(headers_w.size() / 2, universal_cookies[0]);
             headers_w.add(headers_w.size() / 2, universal_cookies[1]);
         }
+        // 未开放的功能 End
 
         // 发送修改后的请求
         byte[] newRequest_w = this.helpers.buildHttpMessage(headers_w, body);
