@@ -60,9 +60,9 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
 
     public void registerExtenderCallbacks(final IBurpExtenderCallbacks callbacks) {
         this.stdout = new PrintWriter(callbacks.getStdout(), true);
-        this.stdout.println("hello xia Yue!");
-        this.stdout.println("你好 欢迎使用 瞎越!");
-        this.stdout.println("version:1.2");
+        this.stdout.println("Welcome to use the repaired version of XiaYue. The original plugin repository address is: https://github.com/smxiazi/xia_Yue");
+        this.stdout.println("欢迎使用瞎越修复版，原插件仓库地址：https://github.com/smxiazi/xia_Yue");
+        this.stdout.println("core version: 1.2 | change after version: 1.0");
         this.callbacks = callbacks;
         this.helpers = callbacks.getHelpers();
         callbacks.setExtensionName("xia Yue V1.2 changed Ethan.Wang V1.0");
@@ -93,10 +93,10 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
                 final JButton btn3 = new JButton("启动白名单");
                 JPanel jps_2 = new JPanel();
                 JLabel jps_2_jls_1 = new JLabel("越权：填写低权限认证信息,将会替换或新增");
-                final JTextArea jta = new JTextArea("Cookie: JSESSIONID=test;UUID=1; userid=admin\nAuthorization: Bearer test", 5, 30);
+                final JTextArea jta = new JTextArea("Cookie: JSESSIONID=test;UUID=1;userid=admin\nAuthorization: Bearer test", 5, 50);
                 JScrollPane jsp = new JScrollPane(jta);
                 JLabel jps_2_jls_2 = new JLabel("未授权：将移除下列头部认证信息,区分大小写");
-                final JTextArea jta_1 = new JTextArea("Cookie\nAuthorization\nToken", 5, 30);
+                final JTextArea jta_1 = new JTextArea("Cookie\nAuthorization\nToken", 5, 50);
                 JScrollPane jsp_1 = new JScrollPane(jta_1);
                 jps_2.add(jps_2_jls_1);
                 jps_2.add(jsp);
@@ -224,7 +224,7 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
                         try {
                             BurpExtender.this.checkVul(messageInfo, toolFlag);
                         } catch (Exception var2) {
-                            var2.printStackTrace();
+                            BurpExtender.this.stdout.println("[运行错误]");
                             BurpExtender.this.stdout.println(var2);
                         }
 
@@ -488,36 +488,12 @@ public class BurpExtender extends AbstractTableModel implements IBurpExtender, I
         }
     }
 
-    private static class Request_md5 {
-        final String md5_data;
+    private record Request_md5(String md5_data) {}
 
-        Request_md5(String md5_data) {
-            this.md5_data = md5_data;
-        }
-    }
-
-    private static class LogEntry {
-        final int id;
-        final String Method;
-        final IHttpRequestResponsePersisted requestResponse;
-        final IHttpRequestResponsePersisted requestResponse_1;
-        final IHttpRequestResponsePersisted requestResponse_2;
-        final String url;
-        final int original_len;
-        final String low_len;
-        final String Unauthorized_len;
-
-        LogEntry(int id, String Method, IHttpRequestResponsePersisted requestResponse, IHttpRequestResponsePersisted requestResponse_1, IHttpRequestResponsePersisted requestResponse_2, String url, int original_len, String low_len, String Unauthorized_len) {
-            this.id = id;
-            this.Method = Method;
-            this.requestResponse = requestResponse;
-            this.requestResponse_1 = requestResponse_1;
-            this.requestResponse_2 = requestResponse_2;
-            this.url = url;
-            this.original_len = original_len;
-            this.low_len = low_len;
-            this.Unauthorized_len = Unauthorized_len;
-        }
+    private record LogEntry(int id, String Method, IHttpRequestResponsePersisted requestResponse,
+                            IHttpRequestResponsePersisted requestResponse_1,
+                            IHttpRequestResponsePersisted requestResponse_2, String url, int original_len,
+                            String low_len, String Unauthorized_len) {
     }
 
     private class Table extends JTable {
